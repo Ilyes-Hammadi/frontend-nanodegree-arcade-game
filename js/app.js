@@ -48,7 +48,7 @@ Enemy.prototype.checkCollision = function () {
 
 	if (collidedOnXAxes && collidedOnYAxes) {
 		console.log("Collided");
-		gameOver();
+		game.gameOver();
 	}
 };
 
@@ -96,7 +96,7 @@ Player.prototype.update = function (dt) {
 	}
 	// The plyer reached the water
 	if (this.y <= -20) {
-		upGradeLevel();
+		game.upgradeLevel();
 	}
 
 };
@@ -123,46 +123,47 @@ Player.prototype.handleInput = function (keyPress) {
 	}
 };
 
-function createRandomEnemies(count) {
+const Game = function () {
+	this.level = 1;
+}
+
+Game.prototype.gameOver = function () {
+	this.level = 1;
+	allEnemies = [];
+	this.init();
+
+};
+
+Game.prototype.init = function () {
+	player.init();
+	this.createRandomEnemies();
+};
+
+Game.prototype.upgradeLevel = function () {
+	this.level++;
+	allEnemies = [];
+	this.init();
+};
+
+Game.prototype.createRandomEnemies = function () {
 	const yPossitions = [60, 140, 220];
 	let randomX;
 	let randomY;
-	for (let i = count; i >= 1; i--) {
+	for (let i = this.level; i >= 1; i--) {
 		// randomX = (Math.floor(Math.random() * 3) * 100);
-		randomX = Math.floor(Math.random() * count) * 100;
+		randomX = Math.floor(Math.random() * this.level) * 100;
 		randomY = Math.floor(Math.random() * 3);
 		allEnemies.push(new Enemy(randomX, yPossitions[randomY % yPossitions.length], 200));
 	}
-}
-
-// Now instantiate your objects.
-// Place all enemy objects in an array called allEnemies
-// Place the player object in a variable called player
-let allEnemies = [];
-const player = new Player(PLAYER_INIT_X, PLAYER_INIT_Y);
-let level = 1;
-
-function initGame() {
-    player.init();
-    createRandomEnemies(level);
-}
-
-function upGradeLevel() {
-    level++;
-    allEnemies = [];
-    initGame();
-}
-
-function gameOver() {
-    level = 1;
-    allEnemies = [];
-    initGame();
-}
-
+};
 
 
 // Start the game
-initGame();
+player = new Player();
+allEnemies = [];
+
+const game = new Game();
+game.init();
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
