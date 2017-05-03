@@ -150,8 +150,7 @@ Game.prototype.createRandomEnemies = function () {
 	let randomX;
 	let randomY;
 	for (let i = this.level; i >= 1; i--) {
-		// randomX = (Math.floor(Math.random() * 3) * 100);
-		randomX = Math.floor(Math.random() * this.level) * 100;
+		randomX = (Math.floor(Math.random() * this.level) * 100);
 		randomY = Math.floor(Math.random() * 3);
 		allEnemies.push(new Enemy(randomX, yPossitions[randomY % yPossitions.length], 200));
 	}
