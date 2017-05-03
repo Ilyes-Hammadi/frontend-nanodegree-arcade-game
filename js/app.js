@@ -32,8 +32,8 @@ Enemy.prototype.update = function (dt) {
 		this.x = -100;
 	}
 
-    // After each update check for collisions with the player
-    this.checkCollision();
+	// After each update check for collisions with the player
+	this.checkCollision();
 };
 
 // Draw the enemy on the screen, required method for game
@@ -43,13 +43,13 @@ Enemy.prototype.render = function () {
 
 Enemy.prototype.checkCollision = function () {
 	// check for collision between enemy and player
-    const collidedOnXAxes = this.x + ENEMY_WIDTH >= player.x && this.x <= player.x + PLAYER_WIDTH;
-    const collidedOnYAxes = this.y + ENEMY_HEIGHT >= player.y && this.y <= player.y + PLAYER_HEIGHT - 20;
+	const collidedOnXAxes = this.x + ENEMY_WIDTH >= player.x && this.x <= player.x + PLAYER_WIDTH;
+	const collidedOnYAxes = this.y + ENEMY_HEIGHT >= player.y && this.y <= player.y + PLAYER_HEIGHT - 20;
 
-    if(collidedOnXAxes && collidedOnYAxes) {
-        console.log("Collided");
-        player.init();
-    }
+	if (collidedOnXAxes && collidedOnYAxes) {
+		console.log("Collided");
+		gameOver();
+	}
 }
 
 /**
@@ -59,7 +59,7 @@ Enemy.prototype.checkCollision = function () {
 // Player global variables
 const PLAYER_INIT_X = 200;
 const PLAYER_INIT_Y = 300;
-const PLAYER_WIDTH = 80;
+const PLAYER_WIDTH = 50;
 const PLAYER_HEIGHT = 80;
 const PLAYER_SPEED = 100;
 
@@ -70,8 +70,8 @@ const Player = function () {
 	this.sprite = 'images/char-boy.png';
 }
 
-Player.prototype.init = function() {
-    this.x = PLAYER_INIT_X;
+Player.prototype.init = function () {
+	this.x = PLAYER_INIT_X;
 	this.y = PLAYER_INIT_Y;
 }
 
@@ -80,24 +80,24 @@ Player.prototype.render = function () {
 };
 
 Player.prototype.update = function (dt) {
-    console.log("Player x: " + this.x);
-    console.log("Player y: " + this.y);
-    // Check collisions between the canvas border
-    // In the X axes
-    if(this.x >= 400) {
-        this.x = 400;
-    }
-    if (this.x <= 0) {
-        this.x = 0;
-    }
-    // In the Y axes
-    if(this.y >= 380) {
-        this.y = 380;
-    }
-    // The plyer reached the water
-    if(this.y <= -20) {
-        this.init();
-    }
+	console.log("Player x: " + this.x);
+	console.log("Player y: " + this.y);
+	// Check collisions between the canvas border
+	// In the X axes
+	if (this.x >= 400) {
+		this.x = 400;
+	}
+	if (this.x <= 0) {
+		this.x = 0;
+	}
+	// In the Y axes
+	if (this.y >= 380) {
+		this.y = 380;
+	}
+	// The plyer reached the water
+	if (this.y <= -20) {
+		upGradeLevel();
+	}
 
 };
 
@@ -123,16 +123,46 @@ Player.prototype.handleInput = function (keyPress) {
 	}
 };
 
+function createRandomEnemies(count) {
+	const yPossitions = [60, 140, 220];
+	let randomX;
+	let randomY;
+	for (let i = count; i >= 1; i--) {
+		// randomX = (Math.floor(Math.random() * 3) * 100);
+		randomX = Math.floor(Math.random() * count) * 100;
+		randomY = Math.floor(Math.random() * 3);
+		allEnemies.push(new Enemy(randomX, yPossitions[randomY % yPossitions.length], 200));
+	}
+}
+
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
-const allEnemies = [];
-const enemy = new Enemy(-100, 140, 200);
-
+let allEnemies = [];
 const player = new Player(PLAYER_INIT_X, PLAYER_INIT_Y);
+let level = 1;
 
-allEnemies.push(enemy);
+function initGame() {
+    player.init();
+    createRandomEnemies(level);
+}
 
+function upGradeLevel() {
+    level++;
+    allEnemies = [];
+    initGame();
+}
+
+function gameOver() {
+    level = 1;
+    allEnemies = [];
+    initGame();
+}
+
+
+
+// Start the game
+initGame();
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
