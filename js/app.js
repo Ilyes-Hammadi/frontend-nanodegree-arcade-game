@@ -50,7 +50,7 @@ Enemy.prototype.checkCollision = function () {
 		console.log("Collided");
 		gameOver();
 	}
-}
+};
 
 /**
  *  Player class
@@ -68,12 +68,12 @@ const Player = function () {
 	this.y = PLAYER_INIT_Y;
 	this.speed = PLAYER_SPEED;
 	this.sprite = 'images/char-boy.png';
-}
+};
 
 Player.prototype.init = function () {
 	this.x = PLAYER_INIT_X;
 	this.y = PLAYER_INIT_Y;
-}
+};
 
 Player.prototype.render = function () {
 	ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
